@@ -273,16 +273,22 @@ public class AltBambooMod extends ShapedOreRecipe
 			getScabbardAchievement());
 
 
-		registCraftAchievement(NAME_FOX_WHITE,
+		registCraftAchievement("fox.white",
 							   "foxwhite",
 							   NAME_FOX_WHITE,
 							   true,
 							   ruby);
 
-		registCraftAchievement(NAME_FOX_BLACK,
+		registCraftAchievement("fox.black",
 							   "foxblack",
 							   NAME_FOX_BLACK,
 							   true,
 							   ruby);
+
+		// ※
+		// 魂晶での実績登録名は、
+		// 刀の CurrentItemName から
+		// "flammpfeil.slashblade.named", "flammpfeil.slashblade"を
+		// 取り除いたものなので、それに合わせて登録する。
 	}
 }
