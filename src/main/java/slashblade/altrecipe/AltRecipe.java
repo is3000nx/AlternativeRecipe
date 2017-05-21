@@ -20,7 +20,7 @@ public class AltRecipe
 {
 	public static final String modname = "AlternativeRecipe";
 	public static final String modid = "slashblade.altrecipe";
-	public static final String version = "mc1.11.2-r0";
+	public static final String version = "mc1.11.2-r1";
   
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)

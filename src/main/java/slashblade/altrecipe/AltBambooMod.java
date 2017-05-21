@@ -241,6 +241,11 @@ public class AltBambooMod extends ShapedOreRecipe
 				'P', getItemStack(SlashBlade.ProudSoulStr))
 			);
 
+        RecipeSorter.register("flammpfeil.slashblade:fox",
+							  RecipeAwakeBladeFox.class,
+							  RecipeSorter.Category.SHAPED,
+							  "after:forge:shaped");
+		
 		// ※
 		// 狐月刀の素材となる刀は、
 		// ちゃんと『利刀「無名」紅玉』になっていないと
