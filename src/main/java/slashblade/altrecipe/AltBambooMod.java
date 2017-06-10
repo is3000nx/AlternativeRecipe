@@ -219,9 +219,10 @@ public class AltBambooMod extends ShapedOreRecipe
 
 		reqiredBlade.setStackDisplayName(reqiredBlade.getDisplayName());;
 
-		String reqiredStr = bladeName + ".reqired";
-		SlashBlade.registerCustomItemStack(reqiredStr, reqiredBlade);
-		ItemSlashBladeNamed.NamedBlades.add(SlashBlade.modid + ":" + reqiredStr);
+		// Creative mode 用(?)、クラフトの前提を満たした刀の登録
+//		String reqiredStr = bladeName + ".reqired";
+//		SlashBlade.registerCustomItemStack(reqiredStr, reqiredBlade);
+//		ItemSlashBladeNamed.NamedBlades.add(SlashBlade.modid + ":" + reqiredStr);
 
 		reqiredBlade = reqiredBlade.copy();
 		reqiredBlade.setItemDamage(OreDictionary.WILDCARD_VALUE);
