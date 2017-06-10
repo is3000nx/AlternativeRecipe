@@ -12,8 +12,8 @@ SlashBlade Mod's Add-on "AlternativeRecipe"
 
 ## インストール / Installation
 
-1. [リリースページ](https://github.com/is3000nx/SlashbladeAddOnPack/releases)からファイルをダウンロード
-2. jarファイルを mods フォルダにコピーする。
+1. [リリースページ](https://github.com/is3000nx/AlternativeRecipe/releases)からファイルをダウンロード
+2. jarファイルを ``mods`` フォルダにコピーする。
 
 追加したレシピに付いては、Minecraft の実績画面で確認できる。
 
