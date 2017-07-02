@@ -95,7 +95,7 @@ public class AltBambooMod extends ShapedOreRecipe
 		RecipeSorter.register("flammpfeil.slashblade:alt:bamboomod",
 							  AltBambooMod.class,
 							  RecipeSorter.Category.SHAPED,
-							  "after:forge:shaped");
+							  "after:forge:shapedore");
 	}
 
 	/**
@@ -245,7 +245,7 @@ public class AltBambooMod extends ShapedOreRecipe
         RecipeSorter.register("flammpfeil.slashblade:fox",
 							  RecipeAwakeBladeFox.class,
 							  RecipeSorter.Category.SHAPED,
-							  "after:forge:shaped");
+							  "after:forge:shapedore");
 		
 		// ※
 		// 狐月刀の素材となる刀は、

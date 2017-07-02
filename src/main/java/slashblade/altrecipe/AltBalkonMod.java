@@ -119,7 +119,7 @@ public class AltBalkonMod extends ShapedRecipes
         RecipeSorter.register("flammpfeil.slashblade:alt:wrap",
 							  AltBalkonMod.class,
 							  RecipeSorter.Category.SHAPED,
-							  "after:forge:shaped");
+							  "after:forge:shapedore");
 	}
 
 	/**
