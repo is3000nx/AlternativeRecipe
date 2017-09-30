@@ -11,16 +11,14 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.Achievement;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import static slashblade.altrecipe.Util.getItemStack;
 import static slashblade.altrecipe.Util.makeWrapBlade;
-import static slashblade.altrecipe.Util.getScabbardAchievement;
-import static slashblade.altrecipe.Util.registCraftAchievement;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Bamboo Mod 連携の代わり.
@@ -91,11 +89,6 @@ public class AltBambooMod extends ShapedOreRecipe
 	private static void addRecipeBambooKatana()
 	{
 		SlashBlade.addRecipe(KEY_RUBY, new AltBambooMod());
-
-		RecipeSorter.register("flammpfeil.slashblade:alt:bamboomod",
-							  AltBambooMod.class,
-							  RecipeSorter.Category.SHAPED,
-							  "after:forge:shapedore");
 	}
 
 	/**
@@ -103,7 +96,8 @@ public class AltBambooMod extends ShapedOreRecipe
 	 */
 	private AltBambooMod()
 	{
-		super(getItemStack(NAME_RUBY),
+		super(AltRecipe.RecipeGroup,
+			  getItemStack(NAME_RUBY),
 			  "  P",
 			  " S ",
 			  "B  ",
@@ -116,6 +110,9 @@ public class AltBambooMod extends ShapedOreRecipe
 		// 右上は「魂片」だが、
 		// 『利刀「鉄」露台』とレシピが被るので
 		// コッチのレシピを「魂塊」に変更。
+
+		setRegistryName(new ResourceLocation(SlashBlade.modid, "alt.bamboo"));
+		
 	}
 
 	/**
@@ -127,8 +124,10 @@ public class AltBambooMod extends ShapedOreRecipe
 	public boolean matches(InventoryCrafting inv, World world)
 	{
 		// 右上は 魂片
-		ItemStack ps = inv.getStackInRowAndColumn(2, 0);
-		if (ps.isEmpty() || !ps.isItemEqual((ItemStack)input[0*3 + 2]))
+		final int X = 2;
+		final int Y = 0;
+		final int W = 3;
+		if (!input.get(Y*W + X).apply(inv.getStackInRowAndColumn(X, Y)))
 			return false;
 
 		// 中央は 空の鞘
@@ -219,34 +218,32 @@ public class AltBambooMod extends ShapedOreRecipe
 
 		reqiredBlade.setStackDisplayName(reqiredBlade.getDisplayName());;
 
-		// Creative mode 用(?)、クラフトの前提を満たした刀の登録
-//		String reqiredStr = bladeName + ".reqired";
-//		SlashBlade.registerCustomItemStack(reqiredStr, reqiredBlade);
-//		ItemSlashBladeNamed.NamedBlades.add(SlashBlade.modid + ":" + reqiredStr);
+		{
+			// Creative mode 用(?)、クラフトの前提を満たした刀の登録
+//			String reqiredStr = bladeName + ".reqired";
+//			SlashBlade.registerCustomItemStack(reqiredStr, reqiredBlade);
+//			ItemSlashBladeNamed.NamedBlades.add(SlashBlade.modid + ":" + reqiredStr);
+		}
 
 		reqiredBlade = reqiredBlade.copy();
 		reqiredBlade.setItemDamage(OreDictionary.WILDCARD_VALUE);
 
-		SlashBlade.addRecipe(
-			bladeName,
-			new RecipeAwakeBladeFox(
-				blade,
-				reqiredBlade,
-				"FPF",
-				"EXE",
-				"FIF",
-				'X', reqiredBlade,
-				'F', Blocks.LAPIS_BLOCK,
-				'E', Blocks.LIT_PUMPKIN,
-				'I', Items.WHEAT,
-				'P', getItemStack(SlashBlade.ProudSoulStr))
-			);
+		RecipeAwakeBladeFox recipe = new RecipeAwakeBladeFox(
+			AltRecipe.RecipeGroup,
+			blade,
+			reqiredBlade,
+			"FPF",
+			"EXE",
+			"FIF",
+			'X', reqiredBlade,
+			'F', Blocks.LAPIS_BLOCK,
+			'E', Blocks.LIT_PUMPKIN,
+			'I', Items.WHEAT,
+			'P', getItemStack(SlashBlade.ProudSoulStr));
+		recipe.setRegistryName(new ResourceLocation(SlashBlade.modid, "alt." + bladeName));
 
-        RecipeSorter.register("flammpfeil.slashblade:fox",
-							  RecipeAwakeBladeFox.class,
-							  RecipeSorter.Category.SHAPED,
-							  "after:forge:shapedore");
-		
+		SlashBlade.addRecipe(bladeName, recipe);
+
 		// ※
 		// 狐月刀の素材となる刀は、
 		// ちゃんと『利刀「無名」紅玉』になっていないと
@@ -258,43 +255,5 @@ public class AltBambooMod extends ShapedOreRecipe
 		// RecipeAwakeBladeFoxのgetCraftingResult(),getRecipeOutput()は
 		// Bamboo Modの刀を鞘に納め直しているけど、
 		// 同じように素材の剣を入れた方が良いかな。
-	}
-
-	/* ============================================================ */
-
-	/**
-	 * 実績の登録処理.
-	 */
-	public static void registAchievement()
-	{
-		// 本来のModが入っていたら何もしない。
-		if (Loader.isModLoaded(ORIGINAL_MOD_ID))
-			return;
-
-		Achievement ruby = registCraftAchievement(
-			KEY_RUBY,
-			"bamboo",
-			NAME_RUBY,
-			false,
-			getScabbardAchievement());
-
-
-		registCraftAchievement("fox.white",
-							   "foxwhite",
-							   NAME_FOX_WHITE,
-							   true,
-							   ruby);
-
-		registCraftAchievement("fox.black",
-							   "foxblack",
-							   NAME_FOX_BLACK,
-							   true,
-							   ruby);
-
-		// ※
-		// 魂晶での実績登録名は、
-		// 刀の CurrentItemName から
-		// "flammpfeil.slashblade.named", "flammpfeil.slashblade"を
-		// 取り除いたものなので、それに合わせて登録する。
 	}
 }

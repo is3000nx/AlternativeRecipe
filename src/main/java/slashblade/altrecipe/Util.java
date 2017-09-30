@@ -5,11 +5,10 @@ import mods.flammpfeil.slashblade.SlashBlade;
 import mods.flammpfeil.slashblade.stats.AchievementList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.Achievement;
 import net.minecraft.stats.StatBase;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraft.util.text.translation.I18n;
 
 /**
  * 共通機能
@@ -86,9 +85,9 @@ final class Util
 	{
 		if (sword.hasDisplayName()) {
 			// 宝刀
-			return String.format(
-				I18n.translateToLocal("item.flammpfeil.slashblade.wrapformat").trim(),
-				sword.getDisplayName());
+			return I18n.translateToLocalFormatted(
+				"item.flammpfeil.slashblade.wrapformat",
+				sword.getDisplayName()).trim();
 
 		} else if (sword.isItemEnchanted()) {
 			return scabbard.getDisplayName();
@@ -96,121 +95,9 @@ final class Util
 
 		} else {
 			// 名刀
-			return String.format(
-				I18n.translateToLocal("item.flammpfeil.slashblade.wrapformat.low").trim(),
-				sword.getDisplayName());
+			return I18n.translateToLocalFormatted(
+				"item.flammpfeil.slashblade.wrapformat.low",
+				sword.getDisplayName()).trim();
 		}		
-	}
-
-	/**
-	 * 実績の登録
-	 *
-	 * @param key 実績名
-	 * @param keyResource 実績名等のリソースキー
-	 * @param nameBlade 刀の登録名
-	 * @param parent 取得の前提となる実績
-	 * @param special スペシャルフラグの有無
-	 */
-	public static Achievement registCraftAchievement(
-		String key,
-		String keyResource,
-		String nameBlade,
-		boolean special,
-		Achievement parent)
-	{
-		// ※
-		// ココと「魂晶」の実績登録のどっちが先に実行されるかは不定？
-		//
-		// 登録済みかどうか確認して、
-		// なければ「魂晶」と同様の実績登録をしてから
-		// 不適切な情報を置き換える。
-		
-        Achievement ach = AchievementList.getAchievement(key);
-		if (ach == null) {
-
-			ach = AchievementList.registerCraftingAchievement(
-				key,
-				SlashBlade.getCustomBlade(nameBlade),
-				parent);
-			AchievementList.setContent(ach, key);
-
-		} else {
-			// 「魂晶」の実績として登録済み。
-			// 魂晶の実績は前提が「武器の作成」になっているので置き換え
-			replaceAchievementParent(ach, parent);
-		}
-
-		if (special)
-			ach.setSpecial();
-		if (keyResource != null)
-			replaceResource(ach, keyResource);
-		return ach;
-	}
-	
-
-	
-	/**
-	 * 「鞘」の作成実績を取得する.
-	 * @return 実績
-	 */
-	static Achievement getScabbardAchievement()
-	{
-		return AchievementList.getAchievement("saya");
-	}
-
-	/**
-	 * 実績のリソース名を置き換える.
-	 * 
-	 * 置き換えるのは実績名と実績の説明のリソースキー
-	 *
-	 * @param ach 実績
-	 * @param keyResource リソースのキー
-	 */
-	static void replaceResource(Achievement ach, String keyResource)
-	{
-		// ※
-		// 連携Modが未対応なので わざとリソース名を変えているのか
-		// 過去のまま修正せずに残ったままなのか
-		// わからないが、
-		// 不適切なので、無理矢理合わせる。
-		// 
-		// 新たに適切なリソースを追加してしまうのが楽だし安全だし
-		// 日本語環境以外やっぱりリソースが存在しないままだが
-		// リソースの内容をまるっとコピーするのもアレなので
-		// 変数の中身を変更する方法を行う。
-		
-		String keyName = "achievement.flammpfeil.slashblade." + keyResource;
-		String keyDesc = keyName + ".desc";
-
-		// 実績名
-		ReflectionHelper.setPrivateValue(StatBase.class,
-										 ach,
-										 new TextComponentTranslation(keyName, new Object[0]),
-										 "statName", "field_75978_a");
-
-		// 実績の説明
-		ReflectionHelper.setPrivateValue(Achievement.class,
-										 ach,
-										 keyDesc,
-										 "achievementDescription", "field_75996_k");
-
-		// AchievementEx.unlocalizedKey は変えない。
-		// このキーは
-		// 実績アイコンの表示位置のリソースに取得するのに使用しているが、
-		// コッチのリソース名は合っている。
-	}
-
-	/**
-	 * 実績の前提実績を置き換える。
-	 *
-	 * @param ach 前提を置き換えたい実績
-	 * @param parent 前提
-	 */
-	static void replaceAchievementParent(Achievement ach, Achievement parent)
-	{
-		ReflectionHelper.setPrivateValue(Achievement.class,
-										 ach,
-										 parent,
-										 "parentAchievement", "field_75992_c");
 	}
 }

@@ -7,18 +7,14 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.stats.Achievement;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.RecipeSorter;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import static slashblade.altrecipe.Util.getItemStack;
-import static slashblade.altrecipe.Util.getScabbardAchievement;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import static slashblade.altrecipe.Util.makeWrapBlade;
-import static slashblade.altrecipe.Util.registCraftAchievement;
 
 /**
  * Balkon's WeaponMod 連携 の代わり.
@@ -113,13 +109,7 @@ public class AltBalkonMod extends ShapedRecipes
 	 */
 	private static void addRecipeBalkonWeapon()
 	{
-        GameRegistry.addRecipe(new AltBalkonMod());
-		addDummyRecipe();
-		
-        RecipeSorter.register("flammpfeil.slashblade:alt:wrap",
-							  AltBalkonMod.class,
-							  RecipeSorter.Category.SHAPED,
-							  "after:forge:shapedore");
+		ForgeRegistries.RECIPES.register(new AltBalkonMod());
 	}
 
 	/**
@@ -127,22 +117,26 @@ public class AltBalkonMod extends ShapedRecipes
 	 */
 	private AltBalkonMod()
 	{
-        super(3, 3,
-			  new ItemStack[] {
+        super(AltRecipe.RecipeGroup.toString(),
+			  3, 3,
+			  NonNullList.<Ingredient>from(
+				  Ingredient.EMPTY,
+				  
+				  Ingredient.EMPTY,
+				  Ingredient.EMPTY,
+				  Ingredient.fromItem(SlashBlade.proudSoul),
 
-				  null,
-				  null,
-				  getItemStack(SlashBlade.ProudSoulStr),
+				  Ingredient.EMPTY,
+				  Ingredient.fromItem(SlashBlade.wrapBlade),
+				  Ingredient.EMPTY ,
 
-				  null,
-				  new ItemStack(SlashBlade.wrapBlade),
-				  null ,
-
-				  new ItemStack(Items.WOODEN_SWORD),
-				  null,
-				  null},
+				  Ingredient.fromItem(Items.WOODEN_SWORD),
+				  Ingredient.EMPTY,
+				  Ingredient.EMPTY),
 
 			  new ItemStack(SlashBlade.wrapBlade));
+
+		setRegistryName(new ResourceLocation(SlashBlade.modid, "alt.balkon"));
 	}
 
 	/**
@@ -155,9 +149,10 @@ public class AltBalkonMod extends ShapedRecipes
 	{
 		// 右上は 魂片
 		ItemStack ps = inv.getStackInRowAndColumn(2, 0);
-		if (ps.isEmpty() || !ps.isItemEqual(recipeItems[0*3 + 2]))
+		Ingredient ing =recipeItems.get(0*3 + 2);
+		if (!ing.apply(ps))
 			return false;
-
+		
 		// 中央は 空の鞘
 		ItemStack sc = inv.getStackInRowAndColumn(1, 1);
 		if (sc.isEmpty() ||
@@ -201,38 +196,12 @@ public class AltBalkonMod extends ShapedRecipes
 		ItemStack sword = inv.getStackInRowAndColumn(0, 2);
 		if (sword.isEmpty())
 			return ItemStack.EMPTY;
-
+		
 		int index = IndexSwords.get(getKey(sword));
 		return makeWrapBlade(scabbard, sword,
 							 BladeNames[index],
 							 TextureNames[index],
 							 BaseAttacks[index]);
-	}
-
-	/**
-	 * 実績画面での表示用ダミーレシピを登録する。
-	 */
-	private static void addDummyRecipe()
-	{
-		Item[] sword = new Item[] {
-			Items.WOODEN_SWORD,
-			Items.STONE_SWORD,
-			Items.IRON_SWORD,
-			Items.DIAMOND_SWORD,
-			Items.GOLDEN_SWORD,
-		};
-
-		for (int i = 0; i < sword.length; i++) {
-			IRecipe dummyRecipe = new ShapedOreRecipe(
-				SlashBlade.getCustomBlade(BladeNames[i] + ".sample"),
-				"  P",
-				" S ",
-				"B  ",
-				'P', SlashBlade.proudSoul,
-				'S', SlashBlade.wrapBlade,
-				'B', sword[i]);
-			SlashBlade.addRecipe(BladeNames[i], dummyRecipe, true);
-		}
 	}
 
 	private static String getKey(Item item)
@@ -243,27 +212,5 @@ public class AltBalkonMod extends ShapedRecipes
 	private static String getKey(ItemStack stack)
 	{
 		return getKey(stack.getItem());
-	}
-
-	/* ============================================================ */
-	
-	/**
-	 * 実績の登録
-	 */
-	public static void registAchievement()
-	{
-		// 本来のModが入っていたら何もしない。
-		if (Loader.isModLoaded(ORIGINAL_MOD_ID))
-			return;
-
-		Achievement scabbard = getScabbardAchievement();
-
-		for (int i = 0; i < TextureNames.length; i++) {
-			registCraftAchievement(BladeNames[i],
-								   "wrap." + TextureNames[i],
-								   BladeNames[i] + ".sample",
-								   false,
-								   scabbard);
-		}
 	}
 }
