@@ -8,7 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatBase;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraft.util.text.translation.I18n;
+//import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resources.I18n;
 
 /**
  * 共通機能
@@ -85,7 +86,8 @@ final class Util
 	{
 		if (sword.hasDisplayName()) {
 			// 宝刀
-			return I18n.translateToLocalFormatted(
+//			return I18n.translateToLocalFormatted(
+			return I18n.format(
 				"item.flammpfeil.slashblade.wrapformat",
 				sword.getDisplayName()).trim();
 
@@ -95,7 +97,8 @@ final class Util
 
 		} else {
 			// 名刀
-			return I18n.translateToLocalFormatted(
+//			return I18n.translateToLocalFormatted(
+			return I18n.format(
 				"item.flammpfeil.slashblade.wrapformat.low",
 				sword.getDisplayName()).trim();
 		}		
