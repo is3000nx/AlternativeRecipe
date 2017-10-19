@@ -2,13 +2,11 @@ package slashblade.altrecipe;
 
 import mods.flammpfeil.slashblade.ItemSlashBladeNamed;
 import mods.flammpfeil.slashblade.SlashBlade;
-import mods.flammpfeil.slashblade.stats.AchievementList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatBase;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-//import net.minecraft.util.text.translation.I18n;
 import net.minecraft.client.resources.I18n;
 
 /**

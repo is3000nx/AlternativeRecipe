@@ -20,7 +20,7 @@ public class AltRecipe
 {
 	public static final String modname = "AlternativeRecipe";
 	public static final String modid = "slashblade.altrecipe";
-	public static final String version = "mc1.12.2-r2";
+	public static final String version = "mc1.12.2-r3";
 
 	public static final ResourceLocation RecipeGroup = new ResourceLocation(SlashBlade.modid,"alt_recipe");
 	

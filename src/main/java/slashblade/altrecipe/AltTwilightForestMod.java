@@ -2,6 +2,7 @@ package slashblade.altrecipe;
 
 import mods.flammpfeil.slashblade.SlashBlade;
 import mods.flammpfeil.slashblade.event.DropEventHandler;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 
 /**
@@ -12,7 +13,7 @@ public class AltTwilightForestMod
 	/**
 	 * 本来のModのMod ID
 	 */
-	static private final String ORIGINAL_MOD_ID = "TwilightForest";
+	static private final String ORIGINAL_MOD_ID = "twilightforest";
 
 	/**
 	 * 各種登録処理.
@@ -29,22 +30,22 @@ public class AltTwilightForestMod
 		// ・特定の場所にしか出現しない敵
 
         DropEventHandler.registerEntityDrop(
-			"EvocationIllager",
+			new ResourceLocation("evocation_illager"),
 			0.3f,
 			SlashBlade.getCustomBlade("flammpfeil.slashblade.named.orotiagito.rust"));
 
         DropEventHandler.registerEntityDrop(
-			"CaveSpider",
+			new ResourceLocation("cave_spider"),
 			0.05f,
 			SlashBlade.getCustomBlade("flammpfeil.slashblade.named.agito.rust"));
 
         DropEventHandler.registerEntityDrop(
-			"Stray",
+			new ResourceLocation("stray"),
 			0.05f,
 			SlashBlade.getCustomBlade("flammpfeil.slashblade.named.yasha"));
 
         DropEventHandler.registerEntityDrop(
-			"ElderGuardian",
+			new ResourceLocation("elder_guardian"),
 			0.3f,
 			SlashBlade.getCustomBlade("flammpfeil.slashblade.named.yashatrue"));
 	}
